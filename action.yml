@@ -1,5 +1,5 @@
-name: Skill Check
-description: Check every SKILL.md under a path for strict-YAML errors, vendor-specific wording, missing fallbacks and broken links. Python 3 standard library only.
+name: SKILL.md Portability Check
+description: Lint SKILL.md agent skills: strict YAML, vendor-specific wording, missing fallbacks, broken links. Python 3 stdlib only.
 author: Pro Skill Packs
 branding:
   icon: check-circle
