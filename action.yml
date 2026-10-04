@@ -1,0 +1,47 @@
+name: Skill Check
+description: Check every SKILL.md under a path for strict-YAML errors, vendor-specific wording, missing fallbacks and broken links. Python 3 standard library only.
+author: Pro Skill Packs
+branding:
+  icon: check-circle
+  color: green
+inputs:
+  path:
+    description: Folder to scan for SKILL.md files.
+    required: false
+    default: "."
+  strict:
+    description: "Set to true to fail on warnings as well as errors."
+    required: false
+    default: "false"
+  ignore:
+    description: "Comma-separated rule IDs to ignore, for example SC008,SC013."
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Run skill_check.py
+      shell: bash
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_STRICT: ${{ inputs.strict }}
+        INPUT_IGNORE: ${{ inputs.ignore }}
+      run: |
+        args=()
+        if [ "$INPUT_STRICT" = "true" ]; then args+=(--strict); fi
+        if [ -n "$INPUT_IGNORE" ]; then args+=(--ignore "$INPUT_IGNORE"); fi
+        set +e
+        python3 "$GITHUB_ACTION_PATH/skill_check.py" "$INPUT_PATH" "${args[@]}" --quiet
+        status=$?
+        python3 "$GITHUB_ACTION_PATH/skill_check.py" "$INPUT_PATH" "${args[@]}" --json > "${RUNNER_TEMP:-/tmp}/skill-check.json"
+        python3 - <<'PY'
+        import json, os
+        d = json.load(open(os.path.join(os.environ.get("RUNNER_TEMP", "/tmp"), "skill-check.json")))
+        out = ["## Skill check", "", f"{len(d['skills'])} skill(s): {d['errors']} error(s), {d['warnings']} warning(s)", ""]
+        out += ["| skill | errors | warnings |", "|---|---|---|"] + [f"| {s['name']} | {len(s['errors'])} | {len(s['warnings'])} |" for s in d["skills"]]
+        for s in d["skills"]:
+            for kind, items in (("ERROR", s["errors"]), ("warn", s["warnings"])):
+                out += [f"- `{s['name']}` {kind}: {m}" for m in items]
+        open(os.environ.get("GITHUB_STEP_SUMMARY", os.devnull), "a").write("\n".join(out) + "\n")
+        PY
+        exit $status

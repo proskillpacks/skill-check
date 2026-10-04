@@ -1,0 +1,41 @@
+name: test
+on: [push, pull_request]
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and run the fixture tests
+        run: |
+          python3 -m py_compile skill_check.py
+          python3 tests/run_tests.py
+  action-passes-on-a-good-skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Action on a folder that should pass
+        uses: ./
+        with:
+          path: fixtures/good-skill
+  action-fails-on-a-bad-skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Action on a folder that should fail
+        id: bad
+        uses: ./
+        continue-on-error: true
+        with:
+          path: fixtures/bad-yaml-colon
+      - name: The step above must have failed
+        run: |
+          if [ "${{ steps.bad.outcome }}" != "failure" ]; then echo "expected the action to fail on bad-yaml-colon"; exit 1; fi
+      - name: Strict mode fails on warnings
+        id: strict
+        uses: ./
+        continue-on-error: true
+        with:
+          path: fixtures/coupled-skill
+          strict: "true"
+      - run: |
+          if [ "${{ steps.strict.outcome }}" != "failure" ]; then echo "expected strict to fail on coupled-skill"; exit 1; fi

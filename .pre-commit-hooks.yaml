@@ -1,0 +1,7 @@
+- id: skill-check
+  name: skill-check
+  description: Check changed SKILL.md files for strict-YAML errors, vendor-specific wording and broken links.
+  entry: skill_check.py
+  language: script
+  files: (^|/)SKILL\.md$
+  pass_filenames: true
