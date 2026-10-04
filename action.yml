@@ -1,5 +1,5 @@
 name: SKILL.md Portability Check
-description: Lint SKILL.md agent skills: strict YAML, vendor-specific wording, missing fallbacks, broken links. Python 3 stdlib only.
+description: "Lint SKILL.md agent skills: strict YAML, vendor-specific wording, missing fallbacks, broken links. Python 3 stdlib only."
 author: Pro Skill Packs
 branding:
   icon: check-circle
