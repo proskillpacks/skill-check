@@ -38,7 +38,7 @@ Flags: `--strict` (warnings fail too), `--json` (machine-readable), `--quiet` (h
 ```yaml
 repos:
   - repo: https://github.com/proskillpacks/skill-check
-    rev: v1.0.0
+    rev: v1.1.0
     hooks:
       - id: skill-check
 ```
@@ -91,6 +91,7 @@ Errors fail the run. Warnings fail it only with `--strict`. Info lines never fai
 | SC014 | warning | Body over 500 lines |
 | SC015 | error | A broken relative markdown link |
 | SC016 | warning | Mentions a `scripts/`, `references/` or `assets/` file that is not there |
+| SC017 | warning | The description says the skill writes text for other people to read (a reply, email, quote, page, summary and so on) but nothing in the skill says what to do with input that is unsure or unconfirmed |
 | SC100 | info | A spec key (`license`, `compatibility`, `metadata`) that not every tool reads |
 | SC101 | info | Agent products named in the text |
 | SC102 | info | Body between 200 and 500 lines |

@@ -8,6 +8,8 @@ EXPECT = {  # fixture: (errors, minimum warnings, text that must appear, rule id
     "bad-yaml-colon": (1, 0, "unquoted ': '", "SC002"),
     "coupled-skill": (0, 6, "WebFetch", "SC010"),
     "broken-links": (2, 1, "broken link", "SC015"),
+    "writer-no-rule": (0, 1, "unsure or unconfirmed", "SC017"),
+    "writer-with-rule": (0, 0, None, None),
 }
 bad = 0
 def run(args): return subprocess.run([sys.executable, CHECK] + args, capture_output=True, text=True)
